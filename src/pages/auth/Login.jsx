@@ -11,16 +11,16 @@ import CustomInput from "components/inputs/CustomInput";
 import { LoginSchema } from "utils/validation-schema";
 import CustomButton from "components/buttons/CustomButton";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
-
-
+import { useNavigate } from "react-router";
 
 const Login = () => {
-  const url = "https://new-social-blogss.b4a.app/login";
+  const url = "http://localhost:4000/login";
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "abdullahyanik016@gmail.com",
+      password: "empaty16",
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
@@ -29,8 +29,11 @@ const Login = () => {
       axios
         .post(url, values)
         .then((response) => {
+          console.log(response);
+          localStorage.setItem("token", response?.data?.token);
+          localStorage.setItem("refreshToken", response?.data?.refreshtoken);
           console.log(response.data.message);
-           showNotification({
+          showNotification({
             color: "green",
             disallowClose: true,
             autoClose: 5000,
@@ -38,18 +41,33 @@ const Login = () => {
             message: response?.data?.message,
             icon: <AiOutlineCheck />,
           });
-console.log(response?.data?.token);
-          localStorage.setItem("token",response?.data?.token)
-         console.log(response)
+          showNotification({
+            color: "green",
+            disallowClose: true,
+            autoClose: 5000,
+            title: "Başarılı",
+            message: response?.data?.token,
+            icon: <AiOutlineCheck />,
+          });
+          showNotification({
+            color: "green",
+            disallowClose: true,
+            autoClose: 5000,
+            title: "Başarılı",
+            message: response?.data?.refreshtoken,
+            icon: <AiOutlineCheck />,
+          });
+          
+          navigate("/")
         })
-        .catch((error,response) => {
+        .catch((error) => {
           console.log(error);
           showNotification({
             color: "red",
             disallowClose: true,
             autoClose: 5000,
             title: "Hata",
-            message: error?.response?.data?.message,
+            message: error?.message,
             icon: <BiErrorCircle />,
           });
         });
@@ -76,7 +94,6 @@ console.log(response?.data?.token);
           <CustomButton variant="light" type="submit" children="Giriş Yap" disabled={false} icon={<AiOutlineSend />} />
         </form>
       </FormikProvider>
-
     </Layout>
   );
 };

@@ -5,11 +5,11 @@ import { NotificationsProvider } from "@mantine/notifications";
 
 const App = () => {
   return (
-      <MantineProvider withNormalizeCSS withGlobalStyles>
-        <NotificationsProvider>
-          <Routing />
-        </NotificationsProvider>
-      </MantineProvider>
+    <MantineProvider withNormalizeCSS withGlobalStyles>
+      <NotificationsProvider>
+        <Routing />
+      </NotificationsProvider>
+    </MantineProvider>
   );
 };
 

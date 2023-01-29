@@ -4,6 +4,10 @@ import { showNotification } from "@mantine/notifications";
 import { AiOutlineMail, AiOutlineUser, AiOutlineSend, AiOutlineCheck } from "react-icons/ai";
 import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
+import { format, } from 'date-fns'
+import { useNavigate } from "react-router";
+
+
 
 //local imports
 import Layout from "layouts/Layout";
@@ -12,30 +16,28 @@ import { RegisterSchema } from "utils/validation-schema";
 import CustomButton from "components/buttons/CustomButton";
 import CustomCheckbox from "components/inputs/CustomCheckbox";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
-import { useNavigate } from "react-router";
 
 const Register = () => {
-  const url = "https://new-social-blogss.b4a.app/register";
+  const url = "http://localhost:4000/register";
 
   const navigate = useNavigate();
 
+  const created_dates = format(new Date(2014, 1, 11), 'MM/dd/yyyy')
+
   const formik = useFormik({
     initialValues: {
-      email: "",
-      name: "",
-      userName: "",
-      password: "",
-      confirm: "",
+      email: "abdullahyanik016@gmail.com",
+      name: "abdullah yanık",
+      userName: "empaty16",
+      password: "empaty16",
+      confirm: true,
+      created_date: created_dates
     },
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
+      console.log(values);
       axios
-        .post(url, values,{ headers: {
-          'dataType': 'json',
-          'X-Parse-Application-Id': "YyoBDZvB9iU5FQhntnUurJtPDzOTKUkVcw0kBZP5", 
-          'X-Parse-REST-API-Key': "8pSTHmBNQhGdijj8bMnME8HElzWbr8JVNG7QN6YM",
-          'Content-Type': 'application/json' 
-      }})
+        .post(url, values)
         .then((response) => {
           console.log(response);
           showNotification({
@@ -51,10 +53,15 @@ const Register = () => {
         .catch(function (error) {
           
           showNotification({
+            color: "red",
+            disallowClose: true,
+            autoClose: 5000,
             title: "Hata",
             message: error?.response?.data?.message,
+            icon: <BiErrorCircle />,
           });
-          console.log(error?.response?.data?.message);
+        
+          console.log(error?.message);
         });
     },
   });
