@@ -15,8 +15,8 @@ import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 import { useNavigate } from "react-router";
 
 const Register = () => {
-  const url = "http://localhost:4000/register";
-  
+  const url = "https://new-social-blogss.b4a.app/register";
+
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -30,35 +30,31 @@ const Register = () => {
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
       axios
-        .post(url, values)
+        .post(url, values,{ headers: {
+          'dataType': 'json',
+          'X-Parse-Application-Id': "YyoBDZvB9iU5FQhntnUurJtPDzOTKUkVcw0kBZP5", 
+          'X-Parse-REST-API-Key': "8pSTHmBNQhGdijj8bMnME8HElzWbr8JVNG7QN6YM",
+          'Content-Type': 'application/json' 
+      }})
         .then((response) => {
           console.log(response);
-          response.status === 200 &&
-            showNotification({
-              color: "green",
-              disallowClose: true,
-              autoClose: 5000,
-              title: "Başarılı",
-              message: response?.data?.message,
-              icon: <AiOutlineCheck />,
-            });
-          response.status === 200 && navigate("/auth/login");
-          response.status === 201 &&
-            showNotification({
-              color: "red",
-              disallowClose: true,
-              autoClose: 5000,
-              title: "Hata",
-              message: response?.data?.message,
-              icon: <BiErrorCircle />,
-            });
+          showNotification({
+            color: "green",
+            disallowClose: true,
+            autoClose: 5000,
+            title: "Başarılı",
+            message: response?.data?.message,
+            icon: <AiOutlineCheck />,
+          });
+          navigate("/auth/login");
         })
-        .catch(function (error, response) {
+        .catch(function (error) {
+          
           showNotification({
             title: "Hata",
-            message: response?.data?.message,
+            message: error?.response?.data?.message,
           });
-          console.log(error);
+          console.log(error?.response?.data?.message);
         });
     },
   });

@@ -12,8 +12,10 @@ import { LoginSchema } from "utils/validation-schema";
 import CustomButton from "components/buttons/CustomButton";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 
+
+
 const Login = () => {
-  const url = "http://localhost:4000/login";
+  const url = "https://new-social-blogss.b4a.app/login";
 
   const formik = useFormik({
     initialValues: {
@@ -27,10 +29,29 @@ const Login = () => {
       axios
         .post(url, values)
         .then((response) => {
-          console.log(response);
+          console.log(response.data.message);
+           showNotification({
+            color: "green",
+            disallowClose: true,
+            autoClose: 5000,
+            title: "Başarılı",
+            message: response?.data?.message,
+            icon: <AiOutlineCheck />,
+          });
+console.log(response?.data?.token);
+          localStorage.setItem("token",response?.data?.token)
+         console.log(response)
         })
-        .catch((error) => {
+        .catch((error,response) => {
           console.log(error);
+          showNotification({
+            color: "red",
+            disallowClose: true,
+            autoClose: 5000,
+            title: "Hata",
+            message: error?.response?.data?.message,
+            icon: <BiErrorCircle />,
+          });
         });
     },
   });
@@ -55,6 +76,7 @@ const Login = () => {
           <CustomButton variant="light" type="submit" children="Giriş Yap" disabled={false} icon={<AiOutlineSend />} />
         </form>
       </FormikProvider>
+
     </Layout>
   );
 };
