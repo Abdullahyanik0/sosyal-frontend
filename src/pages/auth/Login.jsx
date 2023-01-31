@@ -4,6 +4,7 @@ import { showNotification } from "@mantine/notifications";
 import { AiOutlineMail, AiOutlineSend, AiOutlineCheck } from "react-icons/ai";
 import { BiErrorCircle } from "react-icons/bi";
 import axios from "axios";
+import { useNavigate } from "react-router";
 
 //local imports
 import Layout from "layouts/Layout";
@@ -11,7 +12,7 @@ import CustomInput from "components/inputs/CustomInput";
 import { LoginSchema } from "utils/validation-schema";
 import CustomButton from "components/buttons/CustomButton";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
-import { useNavigate } from "react-router";
+
 
 const Login = () => {
   const url = "https://cerulean-fossa-cap.cyclic.app/login";
