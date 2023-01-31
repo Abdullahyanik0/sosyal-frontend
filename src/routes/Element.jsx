@@ -28,7 +28,7 @@ const Element = ({ item }) => {
     (error) => {
       if (error.response.status === 401 && error.response.data.message === "Token expired") {
         console.log("calıştı");
-        const url = "http://localhost:4000/refreshtoken";
+        const url = "https://cerulean-fossa-cap.cyclic.app/refreshtoken";
         axios
           .post(url, { refreshToken: refreshToken })
           .then((response) => {

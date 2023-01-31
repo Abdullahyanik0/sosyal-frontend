@@ -5,8 +5,7 @@ import { Table } from "@mantine/core";
 const Home = () => {
   const [usersData, setUsersData] = useState();
   const [userData, setUserData] = useState();
-  const url = "http://localhost:4000/user";
-  const urls = "http://localhost:4000/user/?id=63d6816b98820efc1ed2cda6";
+  const url = "https://cerulean-fossa-cap.cyclic.app/user";
   const token = localStorage.getItem("token");
 
   console.log(userData);
@@ -22,20 +21,9 @@ const Home = () => {
         console.log(err);
       });
   };
-  const getUser = () => {
-    axios
-      .get(urls, { headers: { token } })
-      .then((response) => {
-        console.log(response);
-        setUserData(response?.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
   useEffect(() => {
     getUsers();
-    getUser();
   }, []);
 
   const rows = usersData?.map((user) => (

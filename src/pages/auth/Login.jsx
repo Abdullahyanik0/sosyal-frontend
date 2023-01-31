@@ -14,7 +14,7 @@ import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const url = "http://localhost:4000/login";
+  const url = "https://cerulean-fossa-cap.cyclic.app/login";
   const navigate = useNavigate();
 
   const formik = useFormik({

@@ -18,7 +18,7 @@ import CustomCheckbox from "components/inputs/CustomCheckbox";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 
 const Register = () => {
-  const url = "http://localhost:4000/register";
+  const url = "https://cerulean-fossa-cap.cyclic.app/register";
 
   const navigate = useNavigate();
 
