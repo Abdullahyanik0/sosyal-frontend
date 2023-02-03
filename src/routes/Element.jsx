@@ -1,7 +1,5 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useJwt } from "react-jwt";
-import axios from "axios";
 
 const Element = ({ item }) => {
   const { element } = item;
@@ -12,13 +10,16 @@ const Element = ({ item }) => {
   const token = localStorage.getItem("token");
   const refreshToken = localStorage.getItem("refreshToken");
 
-  const Render = useCallback(() => {
-    !token && pathname === "/login" && navigate("/auth/register");
+  useEffect(() => {
+    !token && pathname !== "/auth/login" && navigate("/auth/register");
+    
+  }, [navigate, pathname, token]);
 
+  const Render = useCallback(() => {
     return <>{element}</>;
   }, [element, navigate, pathname, token]);
 
   return <Render />;
-}; 
+};
 
 export default Element;
