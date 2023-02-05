@@ -35,33 +35,17 @@ const Register = () => {
     },
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
-      console.log(values);
       setloading(true);
       axios
         .post(url, values)
         .then((response) => {
-          console.log(response);
-          showNotification({
-            color: "green",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Başarılı",
-            message: response?.data?.message,
-            icon: <AiOutlineCheck />,
-          });
+          showNotification({ color: "green", disallowClose: true, autoClose: 3000, title: "Başarılı", message: response?.data?.message, icon: <AiOutlineCheck /> });
           navigate("/auth/login", { state: { email: values.email, password: values.password } });
         })
         .catch(function (error) {
           setloading(false);
 
-          showNotification({
-            color: "red",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Hata",
-            message: error?.response?.data?.message,
-            icon: <BiErrorCircle />,
-          });
+          showNotification({ color: "red", disallowClose: true, autoClose: 3000, title: "Hata", message: error?.response?.data?.message, icon: <BiErrorCircle /> });
 
           console.log(error?.message);
         });

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { showNotification } from "@mantine/notifications";
 import { AiOutlineCheck, AiOutlineUser } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import { BiMessageDetail, BiSearchAlt2 } from "react-icons/bi";
+import { BiExit, BiMessageDetail, BiSearchAlt2 } from "react-icons/bi";
 import { FiSettings } from "react-icons/fi";
 
 const Headers = () => {
@@ -15,7 +15,7 @@ const Headers = () => {
     showNotification({
       color: "green",
       disallowClose: true,
-      autoClose: 5000,
+      autoClose: 3000,
       title: "Success",
       message: "Redirect..",
       icon: <AiOutlineCheck />,
@@ -35,8 +35,8 @@ const Headers = () => {
   const email = user?.email;
   const image = "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80";
   return (
-    <div className=" w-full h-[100px] flex justify-between items-center px-14 sticky top-0 ">
-      <img onClick={() => navigate("/")} className="w-52 cursor-pointer" src="https://upload.wikimedia.org/wikipedia/tr/archive/6/6f/20200713110928%21Turkcell_logo.png" alt="" />
+    <div className=" w-full h-[100px] flex justify-between items-center px-2 sm:px-14 sticky top-0 ">
+      <img onClick={() => navigate("/")} className="sm:w-52 w-32 cursor-pointer" src="https://www.freepnglogos.com/uploads/shopee-logo-png/shopee-logo-money-changers-with-the-best-exchange-rates-singapore-10.png" alt="" />
       <div className="flex gap-x-4 items-center">
         <Menu shadow="md" width={200}>
           <Menu.Target>
@@ -66,7 +66,7 @@ const Headers = () => {
 
             <Menu.Divider />
 
-            <Menu.Item onClick={singOut} color="red">
+            <Menu.Item icon={<BiExit size={20} />} onClick={singOut} color="red">
               Exit
             </Menu.Item>
           </Menu.Dropdown>

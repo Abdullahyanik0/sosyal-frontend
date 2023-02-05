@@ -4,23 +4,22 @@ import { showNotification } from "@mantine/notifications";
 import { BiErrorCircle } from "react-icons/bi";
 import { FormikProvider, useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { AiOutlineCheck, AiOutlineMail, AiOutlineSend, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineCheck, AiOutlineMail, AiOutlineSend, AiOutlineUser, AiOutlineUserDelete } from "react-icons/ai";
 
 //local imports
 import Layout from "layouts/Layout";
 import CustomInput from "components/inputs/CustomInput";
 import CustomButton from "components/buttons/CustomButton";
 import { addUser } from "redux/UserStore";
+import { useNavigate } from "react-router";
 
 const Profile = () => {
   const [loading, setloading] = useState();
-
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const userId = user?._id;
   const url = `https://social-blogs.cyclic.app/profile/${userId}`;
   const dispatch = useDispatch();
-
-  console.log("user,user",user)
 
   const formik = useFormik({
     initialValues: {
@@ -36,31 +35,16 @@ const Profile = () => {
       axios
         .put(url, values)
         .then((response) => {
-          console.log(response);
-          const user = response?.result;
-          console.log(user);
+          const users = response?.data?.result;
           setloading(false);
-          dispatch(addUser(user));
-          showNotification({
-            color: "green",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Başarılı",
-            message: response?.data?.message,
-            icon: <AiOutlineCheck />,
-          });
+          dispatch(addUser(users));
+
+          showNotification({ color: "green", disallowClose: true, autoClose: 3000, title: "Başarılı", message: response?.data?.message, icon: <AiOutlineCheck /> });
         })
         .catch((error) => {
           console.log(error);
           setloading(false);
-          showNotification({
-            color: "red",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Hata",
-            message: error?.response?.data?.message,
-            icon: <BiErrorCircle />,
-          });
+          showNotification({ color: "red", disallowClose: true, autoClose: 3000, title: "Hata", message: error?.response?.data?.message, icon: <BiErrorCircle /> });
         });
     },
   });
@@ -73,6 +57,33 @@ const Profile = () => {
 
   const { email, name, userName } = formik.values;
   const { dirty } = formik;
+
+  const handleDelete = () => {
+    const deleteUrl = `https://social-blogs.cyclic.app/deleteuser/${userId}`;
+    axios
+      .post(deleteUrl)
+      .then((response) => {
+        setloading(false);
+         localStorage.clear();
+
+        showNotification({
+          color: "green",
+          disallowClose: true,
+          autoClose: 3000,
+          title: "Success",
+          message: response?.data?.message,
+          icon: <AiOutlineCheck />,
+        });
+        setTimeout(() => {
+          navigate("/auth/login");
+        }, 2000);
+      })
+      .catch((error) => {
+        console.log(error);
+        setloading(false);
+        showNotification({ color: "red", disallowClose: true, autoClose: 3000, title: "Hata", message: error?.response?.data?.message, icon: <BiErrorCircle /> });
+      });
+  };
 
   return (
     <Layout>
@@ -116,10 +127,23 @@ const Profile = () => {
               icon={<AiOutlineUser size={24} />}
             />
             <CustomButton className="mt-4" fullWidth={true} variant="light" type="submit" children="Save" disabled={!dirty} loading={loading} icon={<AiOutlineSend />} />
-
-            <div>created_date:{user?.created_date}</div>
           </form>
         </FormikProvider>
+        <div className="w-[95%] sm:w-[450px]">
+          <CustomButton
+            className="mt-4"
+            fullWidth={true}
+            onClick={handleDelete}
+            variant="light"
+            color="red"
+            type="submit"
+            children="Delete my account "
+            disabled={!dirty}
+            loading={loading}
+            icon={<AiOutlineUserDelete />}
+          />
+          <div>created_date:{user?.created_date}</div>
+        </div>
       </div>
     </Layout>
   );

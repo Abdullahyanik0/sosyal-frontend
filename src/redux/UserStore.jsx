@@ -8,6 +8,8 @@ export const CardSlice = createSlice({
   reducers: {
     addUser: (state, payload) => {
       state.user = payload.payload;
+      console.log("state.user",state.user)
+      console.log("payload.payload",payload.payload)
     },
   },
 });

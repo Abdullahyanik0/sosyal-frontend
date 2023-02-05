@@ -40,16 +40,9 @@ const Login = () => {
         .then((response) => {
           const users = response?.data?.user;
           dispatch(addUser(users));
-          localStorage.setItem("token",response?.data?.token)
-          
-          showNotification({
-            color: "green",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Başarılı",
-            message: response?.data?.message,
-            icon: <AiOutlineCheck />,
-          });
+          localStorage.setItem("token", response?.data?.token);
+
+          showNotification({ color: "green", disallowClose: true, autoClose: 3000, title: "Başarılı", message: response?.data?.message, icon: <AiOutlineCheck /> });
 
           setTimeout(() => {
             navigate("/");
@@ -57,14 +50,7 @@ const Login = () => {
         })
         .catch((error) => {
           console.log(error);
-          showNotification({
-            color: "red",
-            disallowClose: true,
-            autoClose: 5000,
-            title: "Hata",
-            message: error?.response?.data?.message,
-            icon: <BiErrorCircle />,
-          });
+          showNotification({ color: "red", disallowClose: true, autoClose: 3000, title: "Hata", message: error?.response?.data?.message, icon: <BiErrorCircle /> });
           setloading(false);
         });
     },
@@ -76,7 +62,7 @@ const Login = () => {
   }, [state]);
 
   const { email, password } = formik.values;
-  const { isValid, dirty } = formik;
+  const { dirty } = formik;
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="p-4 drop-shadow-2xl bg-white rounded-xl w-[95%] sm:w-[450px]">
