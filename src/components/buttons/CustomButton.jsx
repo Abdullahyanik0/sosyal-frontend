@@ -1,9 +1,9 @@
 import React from 'react'
 import { Button } from '@mantine/core';
 
-const CustomButton = ({children,disabled,icon,type,variant}) => {
+const CustomButton = ({children,disabled,icon,type,variant,fullWidth,className ,loading}) => {
   return (
-    <Button loading={disabled} variant={variant} type={type} rightIcon={icon} disabled={disabled} size="md">
+    <Button className={className} fullWidth={fullWidth } loading={loading} variant={variant} type={type} rightIcon={icon} disabled={disabled} size="lg">
      {children}
     </Button>
   )

@@ -7,17 +7,17 @@ const Element = ({ item }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const token = localStorage.getItem("token");
+/*   const token = localStorage.getItem("token");
   const refreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
     !token && pathname !== "/auth/login" && navigate("/auth/register");
     
-  }, [navigate, pathname, token]);
+  }, [navigate, pathname, token]); */
 
   const Render = useCallback(() => {
     return <>{element}</>;
-  }, [element, navigate, pathname, token]);
+  }, [element]);
 
   return <Render />;
 };

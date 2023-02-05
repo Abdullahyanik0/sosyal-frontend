@@ -4,7 +4,7 @@ import { TextInput } from "@mantine/core";
 const CustomInput = ({ label, error, placeholder, onChange, value, name, icon }) => {
   return (
     <TextInput
-      className="mt-3 w-[350px]"
+      className="mt-3 w-full"
       radius="md"
       size="md"
       id={value}

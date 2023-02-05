@@ -13,14 +13,18 @@ import { LoginSchema } from "utils/validation-schema";
 import CustomButton from "components/buttons/CustomButton";
 import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 import { Link } from "react-router-dom";
+import { Avatar } from "@mantine/core";
+import { useDispatch } from "react-redux";
+import { addUser } from "redux/UserStore";
+import CustomCheckbox from "components/inputs/CustomCheckbox";
 
 const Login = () => {
-  const [disabledButton, setDisabledButton] = useState();
+  const [loading, setloading] = useState();
 
-  const url = "https://cerulean-fossa-cap.cyclic.app/login";
+  const url = "https://social-blogs.cyclic.app/login";
   const navigate = useNavigate();
   const { state } = useLocation();
-  console.log(state);
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -29,18 +33,15 @@ const Login = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-      setDisabledButton(true)
-      console.log(values);
+      setloading(true);
 
       axios
         .post(url, values)
         .then((response) => {
-          console.log(response);
-          localStorage.setItem("token", response?.data?.token);
-          localStorage.setItem("refreshToken", response?.data?.refreshtoken);
-          console.log(response.data.message);
-          console.log(response?.data?.user);
-          console.log([response?.data?.user]);
+          const users = response?.data?.user;
+          dispatch(addUser(users));
+          localStorage.setItem("token",response?.data?.token)
+          
           showNotification({
             color: "green",
             disallowClose: true,
@@ -49,14 +50,10 @@ const Login = () => {
             message: response?.data?.message,
             icon: <AiOutlineCheck />,
           });
-            setDisabledButton(false)
-            const user = { name: "asd", age: 30 };
-            console.log(user)
-            localStorage.setItem("user",JSON.stringify(response?.data?.user))
 
-         setTimeout(() => {
-          navigate("/");
-         }, 1500);
+          setTimeout(() => {
+            navigate("/");
+          }, 1500);
         })
         .catch((error) => {
           console.log(error);
@@ -65,10 +62,10 @@ const Login = () => {
             disallowClose: true,
             autoClose: 5000,
             title: "Hata",
-            message: error?.message,
+            message: error?.response?.data?.message,
             icon: <BiErrorCircle />,
           });
-            setDisabledButton(false)
+          setloading(false);
         });
     },
   });
@@ -79,9 +76,10 @@ const Login = () => {
   }, [state]);
 
   const { email, password } = formik.values;
+  const { isValid, dirty } = formik;
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      <div className="p-4 drop-shadow-2xl bg-white rounded-md">
+      <div className="p-4 drop-shadow-2xl bg-white rounded-xl w-[95%] sm:w-[450px]">
         <h1 className="mb-8 text-center">Login</h1>
         <Link to="/auth/register">
           Don't you have an account <strong>Register</strong>{" "}
@@ -99,11 +97,38 @@ const Login = () => {
               icon={<AiOutlineMail size={24} />}
             />
             <CustomPasswordInput name="password" value={password} onChange={formik.handleChange} error={formik.touched.password && formik.errors.password} />
-            <div className="flex justify-end mt-4">
-              {" "}
-              <CustomButton  variant="light" type="submit" children="Giriş Yap" disabled={disabledButton} icon={<AiOutlineSend />} />
-            </div>{" "}
+
+            <CustomCheckbox name="confirm" onChange={formik.handleChange} mt="md" label="Beni Hatırla." />
+            <CustomButton className="mt-4" fullWidth={true} variant="light" type="submit" children="Giriş Yap" disabled={!dirty} loading={loading} icon={<AiOutlineSend />} />
           </form>
+          <div>
+            <div className="flex justify-between px-10 pb-8 pt-6">
+              <Avatar
+                id="1"
+                className="cursor-pointer hover:bg-slate-200"
+                size="50px"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png"
+                alt="no image here"
+                color="indigo"
+              />
+              <Avatar
+                id="2"
+                className="cursor-pointer hover:bg-slate-200"
+                size="50px"
+                src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png"
+                alt="no image here"
+                color="indigo"
+              />
+              <Avatar
+                id="3"
+                className="cursor-pointer hover:bg-slate-200"
+                size="50px"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png"
+                alt="no image here"
+                color="indigo"
+              />
+            </div>
+          </div>
         </FormikProvider>
       </div>
     </div>

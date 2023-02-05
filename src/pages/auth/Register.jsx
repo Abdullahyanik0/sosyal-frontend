@@ -17,8 +17,8 @@ import { CustomPasswordInput } from "components/inputs/CustomPasswordInput";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-  const [disabledButton, setDisabledButton] = useState();
-  const url = "https://cerulean-fossa-cap.cyclic.app/register";
+  const [loading, setloading] = useState();
+  const url = "https://social-blogs.cyclic.app/register";
 
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const Register = () => {
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
       console.log(values);
-      setDisabledButton(true);
+      setloading(true);
       axios
         .post(url, values)
         .then((response) => {
@@ -50,10 +50,9 @@ const Register = () => {
             icon: <AiOutlineCheck />,
           });
           navigate("/auth/login", { state: { email: values.email, password: values.password } });
-          setDisabledButton(false);
         })
         .catch(function (error) {
-          setDisabledButton(false);
+          setloading(false);
 
           showNotification({
             color: "red",
@@ -70,9 +69,10 @@ const Register = () => {
   });
 
   const { email, name, userName, password, confirm } = formik.values;
+  const { dirty } = formik;
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
-      <div className="p-4 drop-shadow-2xl bg-white rounded-md">
+    <div className="flex flex-col justify-center items-center h-screen ">
+      <div className="p-4 drop-shadow-2xl bg-white rounded-xl w-[95%] sm:w-[450px]">
         <h1 className="mb-8 text-center">Register</h1>
         <Link to="/auth/login">
           Do you have an account <strong>Login</strong>{" "}
@@ -80,6 +80,7 @@ const Register = () => {
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
             <CustomInput
+              id="Email"
               label="Email"
               name="email"
               type="text"
@@ -90,6 +91,7 @@ const Register = () => {
               icon={<AiOutlineMail size={24} />}
             />
             <CustomInput
+              id="name"
               label="Ad Soyad"
               name="name"
               type="text"
@@ -100,6 +102,7 @@ const Register = () => {
               icon={<AiOutlineUser size={24} />}
             />
             <CustomInput
+              id="userName"
               label="Kullanıcı Adı"
               name="userName"
               type="text"
@@ -110,8 +113,9 @@ const Register = () => {
               icon={<AiOutlineUser size={24} />}
             />
 
-            <CustomPasswordInput name="password" value={password} onChange={formik.handleChange} error={formik.touched.password && formik.errors.password} />
+            <CustomPasswordInput id="password" name="password" value={password} onChange={formik.handleChange} error={formik.touched.password && formik.errors.password} />
             <CustomCheckbox
+              id="confirm"
               name="confirm"
               onChange={formik.handleChange}
               error={formik.touched.confirm && formik.errors.confirm}
@@ -119,10 +123,8 @@ const Register = () => {
               mt="md"
               label="I agree to sell my privacy."
             />
-            <div className="flex justify-end ">
-              {" "}
-              <CustomButton variant="light" type="submit" children="Kayıt Ol" disabled={disabledButton} icon={<AiOutlineSend />} />
-            </div>
+
+            <CustomButton className="mt-4" fullWidth={true} variant="light" children="Kayıt Ol" type="submit" disabled={!dirty} loading={loading} icon={<AiOutlineSend />} />
           </form>
         </FormikProvider>
       </div>
