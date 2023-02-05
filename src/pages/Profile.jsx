@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { showNotification } from "@mantine/notifications";
 import { BiErrorCircle } from "react-icons/bi";
 import { FormikProvider, useFormik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineCheck, AiOutlineMail, AiOutlineSend, AiOutlineUser, AiOutlineUserDelete } from "react-icons/ai";
+import { Group, Text, FileButton, Button } from "@mantine/core";
 
 //local imports
 import Layout from "layouts/Layout";
@@ -26,6 +27,7 @@ const Profile = () => {
       userName: "",
       email: "",
       name: "",
+      file: "",
     },
     /*  validationSchema: LoginSchema, */
     onSubmit: (values) => {
@@ -55,16 +57,16 @@ const Profile = () => {
     formik.setFieldValue("name", user?.name);
   }, []);
 
-  const { email, name, userName } = formik.values;
+  const { email, name, userName, file } = formik.values;
   const { dirty } = formik;
 
   const handleDelete = () => {
+    setloading(true);
     const deleteUrl = `https://social-blogs.cyclic.app/deleteuser/${userId}`;
     axios
       .post(deleteUrl)
       .then((response) => {
-        setloading(false);
-         localStorage.clear();
+        localStorage.clear();
 
         showNotification({
           color: "green",
@@ -88,11 +90,36 @@ const Profile = () => {
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center">
-        <img
-          className="rounded-full w-52 h-52 object-cover"
-          src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
-          alt=""
-        />
+        <>
+          <Group position="center">
+            <FileButton
+              id="file"
+              name="file"
+              type="file"
+              onChange={(event) => {
+                formik.setFieldValue("file", event.currentTarget.files[0]);
+                console.log(event)
+              }}
+              accept="image/png,image/jpeg"
+            >
+              {(props) => (
+                <Button className="hover:bg-transparent bg-transparent h-full w-full" {...props}>
+                  <img
+                    className="rounded-full w-52 h-52 object-cover"
+                    src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
+                    alt=""
+                  />
+                </Button>
+              )}
+            </FileButton>
+          </Group>
+          {file && (
+            <Text size="sm" align="center" mt="sm">
+              Picked file: {file.name}
+            </Text>
+          )}
+        </>
+
         <h1>{user?.userName}</h1>
         <FormikProvider value={formik}>
           <form className="w-[95%] sm:w-[450px]" onSubmit={formik.handleSubmit}>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const CardSlice = createSlice({
+export const userSlice = createSlice({
   name: "card",
   initialState: {
     user: [],
@@ -8,12 +8,15 @@ export const CardSlice = createSlice({
   reducers: {
     addUser: (state, payload) => {
       state.user = payload.payload;
-      console.log("state.user",state.user)
-      console.log("payload.payload",payload.payload)
     },
+    removeUser: (state) => {
+      state.user = [];
+      localStorage.clear();
+    },
+    
   },
 });
 
-export const { addUser } = CardSlice.actions;
+export const { addUser, removeUser } = userSlice.actions;
 
-export default CardSlice.reducer;
+export default userSlice.reducer;
